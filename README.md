@@ -1,5 +1,5 @@
 # Bachelor-thesis-repo
-This repo contains raw data and code used in all analyses. 
+This repo contains Python code and Gretl scripts used in all analyses. Access to data is reqiured to perform calculations
 ## Data
 This research uses microdata from the World Bank Enterprise Surveys and intra-firm data from Moody's Orbis database
 
