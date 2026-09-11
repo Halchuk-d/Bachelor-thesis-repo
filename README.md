@@ -2,7 +2,7 @@
 This repo contains Python code and Gretl scripts used in all analyses. Access to data is reqiured to perform calculations
 ## Research reproduction manual
 
- *WBES analysis*
+ ### WBES analysis
 1. Data extraction with python
    
    Unpack folders "datasets" and "datasets_incomplete" from the ZIP file and load them to local Google Drive
@@ -16,7 +16,7 @@ This repo contains Python code and Gretl scripts used in all analyses. Access to
    Open Mann_Whitney_U_test.ipynb in Google Colab and follow the instructions in the comments
    
 
-*Regression Modelling*
+### Regression Modelling
 
    Download all the files from the folder regression_modelling and assign the files to one folder
    
