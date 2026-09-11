@@ -6,17 +6,23 @@ This repo contains Python code and Gretl scripts used in all analyses. Access to
 1. Data extraction with python
    
    Unpack folders "datasets" and "datasets_incomplete" from the ZIP file and load them to local Google Drive
+   
    Open WBES_analysis_final_extended.ipynb and WBES_analysis_for_incomplete_extended.ipynb in Google Colab and follow the instructions in the comments
+   
 3. Mann-Whitney U-test replication
    
    Download WBES_data.xlsx from the zip file
+   
    Open Mann_Whitney_U_test.ipynb in Google Colab and follow the instructions in the comments
 
 *Regression Modelling*
 
    Download all the files from the folder regression_modelling and assign the files to one folder
+   
    Download logitreg_data.xlsx from the ZIP file and assign to the folder where scripts are located
+   
    Open Logit_regression.inp and follow the instructions in the comments
+   
    To draw the graph of the main Model 5 outcome simply run plot_CD_slopes.inp
    
 ## Data
