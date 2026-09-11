@@ -1,5 +1,13 @@
 # Bachelor-thesis-repo
 This repo contains Python code and Gretl scripts used in all analyses. Access to data is reqiured to perform calculations
+## Research reproduction manual
+# WBES analysis
+1. Data extraction with python
+   Unpack folders "datasets" and "datasets_incomplete" from the ZIP file and load them to local Google Drive
+   Open WBES_analysis_final_extended.ipynb and WBES_analysis_for_incomplete_extended.ipynb in Google Colab and follow the instructions in the comments
+2. Mann-Whitney U-test replication
+   Download WBES_data.xlsx from the zip file
+   Open Mann_Whitney_U_test.ipynb in Google Colab and follow the instructions in the comments
 ## Data
 This research uses microdata from the World Bank Enterprise Surveys and intra-firm data from Moody's Orbis database
 
