@@ -1,5 +1,6 @@
 #Be sure to have Regression.gdt and Regression_robcheck.gdt downloaded into your device and in the same folder before running the script.
 open Regression_settings.gdt
+#Ctrl+R to run the script
 logit EM const IntangibleAssets IU CD --p-values #Model 1 - Baseline
 logit EM const IntangibleAssets IU CD EU Employees int_emp_EU --p-values #Model 2
 logit EM const IntangibleAssets IU CD FixedAssets EU int_fix_EU --p-values #Model 3
