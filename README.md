@@ -2,7 +2,7 @@
 This repo contains Python code and Gretl scripts used in all analyses. Access to data is reqiured to perform calculations
 ## Research reproduction manual
 
- WBES analysis
+ *WBES analysis*
 1. Data extraction with python
    
    Unpack folders "datasets" and "datasets_incomplete" from the ZIP file and load them to local Google Drive
@@ -11,6 +11,14 @@ This repo contains Python code and Gretl scripts used in all analyses. Access to
    
    Download WBES_data.xlsx from the zip file
    Open Mann_Whitney_U_test.ipynb in Google Colab and follow the instructions in the comments
+
+   *Regression Modelling*
+
+   Download all the files from the folder regression_modelling and assign the files to one folder
+   Download logitreg_data.xlsx from the ZIP file and assign to the folder where scripts are located
+   Open Logit_regression.inp and follow the instructions in the comments
+   To draw the graph of the main Model 5 outcome simply run plot_CD_slopes.inp
+   
 ## Data
 This research uses microdata from the World Bank Enterprise Surveys and intra-firm data from Moody's Orbis database
 
