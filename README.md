@@ -12,7 +12,7 @@ This repo contains Python code and Gretl scripts used in all analyses. Access to
    Download WBES_data.xlsx from the zip file
    Open Mann_Whitney_U_test.ipynb in Google Colab and follow the instructions in the comments
 
-   *Regression Modelling*
+*Regression Modelling*
 
    Download all the files from the folder regression_modelling and assign the files to one folder
    Download logitreg_data.xlsx from the ZIP file and assign to the folder where scripts are located
