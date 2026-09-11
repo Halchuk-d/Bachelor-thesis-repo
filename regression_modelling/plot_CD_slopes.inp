@@ -1,0 +1,115 @@
+# Gretl script: predicted-probability slopes for CD
+# at IU = 0 and IU = +1 SD, from a logit model with an IU*CD interaction term.
+
+open Regression_settings.gdt
+# 1. Estimate the logit model (re-estimate so $coeff is available)
+logit EM const IntangibleAssets IU CD int_IU_CD
+
+# 2. Store coefficients
+scalar b0 = $coeff(const)
+scalar b1 = $coeff(IntangibleAssets)
+scalar b2 = $coeff(IU)
+scalar b3 = $coeff(CD)
+scalar b4 = $coeff(int_IU_CD)
+
+# 3. Values to hold other variables at / IU levels
+# NOTE: IU was standardized (z-scored) BEFORE the model was estimated,
+# so in these units 1 SD = 1. Do NOT recompute sd(IU) from the data here.
+scalar IA_mean = mean(IntangibleAssets)   # hold IntangibleAssets at its mean (fixed control)
+scalar IU_lo   = 0                        # IU = 0  (i.e. sample mean of the original variable)
+scalar IU_hi   = 1                        # IU = +1 SD
+
+# 4. Build a grid of CD values across its observed range
+scalar CD_min = min(CD)
+scalar CD_max = max(CD)
+scalar nsteps = 50
+scalar step   = (CD_max - CD_min) / nsteps
+
+matrix CDgrid = zeros(nsteps+1, 1)
+loop i=1..(nsteps+1)
+    CDgrid[i] = CD_min + (i-1)*step
+endloop
+
+# 5. Compute linear predictor (xb) and predicted probability for each IU level
+matrix xb_lo = b0 + b1*IA_mean + b2*IU_lo + b3*CDgrid + b4*(IU_lo .* CDgrid)
+matrix xb_hi = b0 + b1*IA_mean + b2*IU_hi + b3*CDgrid + b4*(IU_hi .* CDgrid)
+
+matrix P_IU0   = 1 / (1 + exp(-xb_lo))
+matrix P_IUsd  = 1 / (1 + exp(-xb_hi))
+
+# 6. Combine into one matrix for plotting
+matrix mplot = CDgrid ~ P_IU0 ~ P_IUsd
+colnames(mplot, "CD P_IU0 P_IUsd")
+
+# 6b. Solve for the IU value needed to hit a target predicted probability,
+#     holding CD fixed at a chosen value (e.g. its mode) and IntangibleAssets
+#     at its mean.
+scalar target_p   = 0.95
+scalar CD_fixed   = -0.659150571          # <- set to your CD value of interest (e.g. mode)
+scalar logit_target = ln(target_p / (1 - target_p))
+
+scalar slope_IU = b2 + b4*CD_fixed        # marginal effect of IU on logit, at CD_fixed
+scalar baseline  = b0 + b1*IA_mean + b3*CD_fixed   # logit value when IU = 0
+
+scalar IU_needed = (logit_target - baseline) / slope_IU
+
+printf "\nAt CD = %.4f, IntangibleAssets = mean:\n", CD_fixed
+printf "IU needed for predicted probability = %.2f is: %.4f (SD units)\n", target_p, IU_needed
+
+# 6c. Find the maximum predicted probability actually achievable within
+#     the OBSERVED range of IU and CD (not extrapolated values).
+#     Because logit(p) is linear in IU and linear in CD, its max/min over a
+#     rectangular range occurs at one of the four corners of that rectangle.
+scalar IU_min = min(IU)
+scalar IU_max = max(IU)
+scalar CDr_min = min(CD)
+scalar CDr_max = max(CD)
+
+matrix corners = { IU_min, CDr_min ; \
+                    IU_min, CDr_max ; \
+                    IU_max, CDr_min ; \
+                    IU_max, CDr_max }
+
+matrix corner_xb = b0 + b1*IA_mean + b2*corners[,1] + b3*corners[,2] + b4*(corners[,1] .* corners[,2])
+matrix corner_p  = 1 / (1 + exp(-corner_xb))
+
+matrix cornertable = corners ~ corner_p
+colnames(cornertable, "IU CD PredProb")
+
+printf "\nPredicted probability at the four corners of the observed IU x CD range:\n"
+printf "%12s %12s %12s\n", "IU", "CD", "PredProb"
+loop i=1..4
+    printf "%12.4f %12.4f %12.4f\n", cornertable[i,1], cornertable[i,2], cornertable[i,3]
+endloop
+
+scalar max_realistic_p = max(corner_p)
+printf "\nMaximum realistically achievable predicted probability (within observed data range) = %.4f\n", max_realistic_p
+
+# 6d. Easy-to-report version: probability change from IU=0 to the MAXIMUM
+#     observed IU in the data, holding CD fixed (e.g. at its mode).
+scalar xb_IU0  = b0 + b1*IA_mean + b2*0      + b3*CD_fixed + b4*(0 * CD_fixed)
+scalar xb_IUmax = b0 + b1*IA_mean + b2*IU_max + b3*CD_fixed + b4*(IU_max * CD_fixed)
+
+scalar p_IU0   = 1 / (1 + exp(-xb_IU0))
+scalar p_IUmax = 1 / (1 + exp(-xb_IUmax))
+
+scalar pp_change   = (p_IUmax - p_IU0) * 100          # percentage-point change
+scalar pct_change  = (p_IUmax - p_IU0) / p_IU0 * 100  # relative % change
+
+printf "\n--- Reportable summary: IU = 0 vs IU = max observed (%.4f), CD held at %.4f ---\n", IU_max, CD_fixed
+printf "Predicted probability at IU = 0:        %.4f (%.1f%%)\n", p_IU0, p_IU0*100
+printf "Predicted probability at IU = max:       %.4f (%.1f%%)\n", p_IUmax, p_IUmax*100
+printf "Change: %.2f percentage points (%.1f%% relative increase)\n", pp_change, pct_change
+
+# 7. Plot
+# NOTE: CD was also standardized before estimation, so CDgrid is already
+# in SD units (it's just taken from the observed range of the standardized
+# variable) -- no rescaling needed, just label the axis accordingly.
+gnuplot 2 3 1 --matrix=mplot --with-lines --output=display \
+  { set title "Predicted probability by CD, at IU = 0 vs IU = +1 SD"; \
+    set xlabel "CD (standardized, SD units)"; \
+    set ylabel "Predicted probability"; \
+    set key top left; \
+    set arrow from -1,graph(0,0) to -1,graph(1,1) nohead dt 2 lc rgb "gray"; \
+    set arrow from 0,graph(0,0) to 0,graph(1,1) nohead dt 2 lc rgb "gray"; \
+    set arrow from 1,graph(0,0) to 1,graph(1,1) nohead dt 2 lc rgb "gray"; }
