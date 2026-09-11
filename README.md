@@ -7,7 +7,7 @@ This repo contains Python code and Gretl scripts used in all analyses. Access to
    
    Unpack folders "datasets" and "datasets_incomplete" from the ZIP file and load them to local Google Drive
    
-   Open WBES_analysis_final_extended.ipynb and WBES_analysis_for_incomplete_extended.ipynb in Google Colab and follow the instructions in the comments
+   Download from the repo and open WBES_analysis_final_extended.ipynb and WBES_analysis_for_incomplete_extended.ipynb in Google Colab and follow the instructions in the comments
    
 3. Mann-Whitney U-test replication
    
