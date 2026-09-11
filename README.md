@@ -25,6 +25,8 @@ This repo contains Python code and Gretl scripts used in all analyses. Access to
    Open Logit_regression.inp and follow the instructions in the comments
    
    To draw the graph of the main Model 5 outcome simply run plot_CD_slopes.inp
+
+   *Press Ctrl+R to run the script*
    
 ## Data
 This research uses microdata from the World Bank Enterprise Surveys and intra-firm data from Moody's Orbis database
