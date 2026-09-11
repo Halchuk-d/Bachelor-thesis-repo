@@ -1,0 +1,13 @@
+#Be sure to have Regression.gdt and Regression_robcheck.gdt downloaded into your device and in the same folder before running the script.
+open Regression_settings.gdt
+logit EM const IntangibleAssets IU CD --p-values #Model 1 - Baseline
+logit EM const IntangibleAssets IU CD EU Employees int_emp_EU --p-values #Model 2
+logit EM const IntangibleAssets IU CD FixedAssets EU int_fix_EU --p-values #Model 3
+logit EM const IntangibleAssets IU CD Employees int_emp_IU --p-values #Model 4
+logit EM const IntangibleAssets IU CD int_IU_CD --p-values #Model 5
+
+#leave-one-country-out robustness check
+#I investigate Model 1 and 5 becuase they have the most impact on research
+open Regression_robcheck.gdt
+logit EM const IntangibleAssets IU CD --p-values #Model 1 with no account of the largest country by sample size
+logit EM const IntangibleAssets IU CD int_IU_CD --p-values #Model 5 with no account of the largest country by sample size
